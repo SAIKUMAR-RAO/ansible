@@ -1,0 +1,42 @@
+---
+- hosts: '{{ hostname }}'
+  become: yes
+  gather_facts: yes
+  vars:
+    hostname: node
+    package1: vsftpd
+    package2: firewalld
+    portno: 21
+    path: /etc/vsftpd/vsftpd.conf
+  tasks:
+  - name: Install defined package
+    yum:
+      name: '{{ package1 }}'
+      update_cache: yes
+      state: latest
+  - name: Install defined package
+    yum:
+      name: '{{ package2 }}'
+      update_cache: yes
+      state: latest
+  - name: Start desired service
+    service:
+      name: '{{ package1 }}'
+      state: started
+  - name: Start desired service
+    service:
+      name: '{{ package2 }}'
+      state: started
+  - name: Firewall Enablement for service
+    firewalld:
+      port: '{{ portno }}/tcp'
+      permanent: true
+      state: enabled
+  - name: Start desired service
+    service:
+      name: '{{ package2 }}'
+      state: restarted
+  - name: Conf file replacement with template file
+    copy:
+      src: /home/ansible/ansible/file/vsftpd.conf
+      dest: '{{ path }}'

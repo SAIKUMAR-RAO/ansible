@@ -1,0 +1,13 @@
+---
+- hosts: node
+  become: yes
+  tasks:
+  - name: Setting up nested loops
+    mysql_user:
+      name: "{{ item[0] }}"
+      priv: "{{ item[1] }}.*:ALL"
+      append_priv: yes
+      password: "pwd"
+    with_nested:
+      - [ 'sarah', 'tom', 'jeff', ]
+      - [ 'clientdb', 'serverdb', 'provdb', ]

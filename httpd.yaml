@@ -1,0 +1,40 @@
+---
+- hosts: inode
+  gather_facts: yes
+  become: yes
+  tasks:
+  - name: Installing httpd on node
+    yum:
+      name: httpd      
+      state: installed
+      update_cache: yes
+    register: install_result
+  - debug: var=install_result
+  - name: Uploading the default index.html
+    copy:
+      src: /home/ansible/ansible/index.html
+      dest: /var/www/html
+  - name: setting the attributes for file
+    file:
+      path: /var/www/html/index.html
+      owner: apache
+      group: apache
+      mode:  0644
+  - name: Starting the service
+    service:
+      name: httpd
+      state: started
+#  - name: firewall 80 port open
+#    firewalld:
+#      service: httpd
+#      permanent: true
+#      state: enabled
+#  - name: restart the firewalld
+#    service:
+#      name: firewalld
+#      service: restarted
+  - name: enabling the httpd service
+    service:
+      name: httpd
+      enabled: true
+    

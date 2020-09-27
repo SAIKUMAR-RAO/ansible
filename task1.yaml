@@ -1,0 +1,25 @@
+---
+- hosts: node
+  gather_facts: yes
+  become: yes
+  tasks:
+  - name: Creating the user
+    user:
+      name: ironman
+      create_home: true
+  - name: Creating a new folder
+    file:
+      path: /home/ironman/ansible
+      state: directory
+      owner: ironman
+  - name: Creating a sample file
+    file:
+      path: /home/ironman/ansible/text
+      state: touch
+      mode: "0665"
+      owner: ironman
+  - name: Appending a string to file
+    lineinfile:
+      path: /home/ironman/ansible/text
+      line: "Hey, welcome back...!!"
+
