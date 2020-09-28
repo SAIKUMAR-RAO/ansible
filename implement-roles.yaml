@@ -1,0 +1,7 @@
+---
+- hosts: node
+  become_user: root
+  become: yes
+  roles:
+    - webrole
+    - dbrole

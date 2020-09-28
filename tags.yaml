@@ -1,0 +1,21 @@
+---
+- hosts: node
+  become: yes
+  any_errors_fatal: true
+  gather_facts: no
+  tasks:
+  - name: Install the packages
+    yum:
+      name: "{{ item }}"
+      state: installed
+    with_items:
+      - httpd
+      - vsftpd
+    tags:
+      - packages
+  - name: Usage of templates
+    template:
+      src: template/src.j2
+      dest: /etc/test.conf
+    tags:
+      - config

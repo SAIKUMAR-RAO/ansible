@@ -1,0 +1,25 @@
+---
+- hosts: node
+  connection: ssh
+  become_user: root
+  tasks:
+  - name: Install apache web server
+    yum:
+      name: httpd
+      state: latest
+  - name: Verify status od services
+    shell: systemctl status httpd
+    register: result
+    until: result.stdout.find("active (running)") != -1
+    retries: 3
+    delay: 5
+
+#run once concept
+- hosts: node
+  connection: ssh
+  become_user: root
+  tasks:
+  - name: Recording uptime on all machines
+    raw: /usr/bin/uptime >> /tmp/uptime
+    run_once: true
+

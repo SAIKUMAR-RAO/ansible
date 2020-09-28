@@ -1,0 +1,14 @@
+---
+- hosts: node
+  gather_facts: yes
+  become_user: root
+  vars:
+    host_list: node
+    operatingsystem: RedHat
+    architecture: x64
+    distribution: 7.2
+  tasks:
+  - name: Render jinja template
+    template:
+      src: /home/ansible/ansible/template.j2
+      dest: /tmp/dest-config.txt

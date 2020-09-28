@@ -1,0 +1,45 @@
+---
+- hosts: node
+  become_user: root
+  connection: ssh
+  tasks:
+  - name: Adding a number of users
+    user: 
+      name: "{{ item }}"
+      state: present
+    with_items:
+      - ironman
+      - batman
+      - superman
+    tags:
+      - user
+
+# tags concept
+- hosts: node
+  become_user: root
+  connection: ssh
+  tasks:
+  - name: Install telnet
+    yum:
+      name: telnet
+      state: latest
+    tags:
+      - packages
+  - name: Verify telnet installation
+    raw: yum list installed | grep telnet > /root/pkg.log
+    tags:
+      - logging
+
+# prompts concept
+- hosts: node
+  become: yes
+  vars_prompt:
+    - name: pkginstall
+      prompt: Which package do you want to install?
+      default: telnet
+      private: no
+  tasks:
+    - name: Install the package specified
+      yum:
+        name: "{{ pkginstall }}"
+        state: latest
